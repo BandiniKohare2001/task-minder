@@ -1,5 +1,5 @@
 import "./Home.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Task from "../../components/Task/Task";
 
 const Home = () => {
@@ -16,6 +16,14 @@ const Home = () => {
     const [description, setDescription] = useState('')
     const [priority, setPriority] = useState('')
 
+useEffect(()=>{
+    const list = JSON.parse(localStorage.getItem('taskminder'));
+    setTaskList(list)
+}, [])
+    const saveListToLocalStorage = (tasks) =>{
+        localStorage.setItem('taskminder', JSON.stringify(tasks))
+    }
+
     const addTaskTolist = () => {
         const randomId = Math.floor(Math.random() * 10000);
         const obj = {
@@ -24,11 +32,15 @@ const Home = () => {
             description: description,
             priority: priority
         }
-        setTaskList([...taskList, obj])
+
+        const newTaskList = [...taskList, obj]
+        setTaskList(newTaskList)
 
         setTitle('');
         setDescription('');
         setPriority('');
+
+        saveListToLocalStorage(newTaskList);
     }
 
     const removeTaskFromList = (id) => {
@@ -42,6 +54,8 @@ const Home = () => {
        tempArray.splice(index, 1);
 
        setTaskList([...tempArray])
+
+       saveListToLocalStorage(tempArray)
     }
     return (
         <div className="container">
