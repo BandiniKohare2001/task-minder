@@ -39,7 +39,25 @@ margin-top: 30px;
     font-size: 25px;
     position: absolute;
     bottom: 10px;
+    background-color: beige;
+    border-radius: 50%;
     cursor: pointer;
+    padding: 5px;
+    font-size: 15px;
+     box-shadow: 0 0 5px 0.5px gray;
+
+}
+.edit-task-icon{
+    right: 55px;
+    background-color: beige;
+    border-radius: 50%;
+    padding: 5px;
+    font-size: 25px;
+    position: absolute;
+    bottom: 10px;
+    cursor: pointer;
+    font-size: 15px;
+    box-shadow: 0 0 5px 0.5px gray;
 }
 @media (max-width: 679px){
     .task-container{  

@@ -1,7 +1,7 @@
 import "./Task.css"
 import React from "react"
 
-const Task = ({id, title, description, priority, removeTaskFromList}) => {
+const Task = ({id, title, description, priority, removeTaskFromList, setTaskEditable}) => {
     return(
         <div className="task-container">
             <h1 className="task-title">{title}</h1>
@@ -12,6 +12,13 @@ const Task = ({id, title, description, priority, removeTaskFromList}) => {
                 removeTaskFromList(id);
             }}
             >🗑️</span>
+
+              <span className="edit-task-icon"
+            onClick={() => {
+                setTaskEditable(id);
+            }}
+            >🖋️
+            </span>
         </div>
     )
 }
