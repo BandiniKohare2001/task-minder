@@ -1,5 +1,7 @@
 import "./Home.css";
+import showToast from 'crunchy-toast';
 import React, { useEffect, useState } from "react";
+import {saveListToLocalStorage} from './../../util/localStorage';
 import Task from "../../components/Task/Task";
 
 const Home = () => {
@@ -24,10 +26,22 @@ const Home = () => {
             setTaskList(list)
         }
     }, [])
-    const saveListToLocalStorage = (tasks) => {
-        localStorage.setItem('taskminder', JSON.stringify(tasks))
-    }
+    
+const findIndexByTaskId = (taskId) => {
+    let index;
 
+    taskList.forEach((task, i) => {
+        if(task.id === taskId){
+            index= i
+        }
+    })
+  return index;
+}
+    const clearInputFields = () => {
+        setTitle('');
+        setDescription('');
+        setPriority('');
+    }
     const addTaskTolist = () => {
         const randomId = Math.floor(Math.random() * 10000);
         const obj = {
@@ -40,42 +54,52 @@ const Home = () => {
         const newTaskList = [...taskList, obj]
         setTaskList(newTaskList)
 
-        setTitle('');
-        setDescription('');
-        setPriority('');
+        clearInputFields()
 
         saveListToLocalStorage(newTaskList);
+        showToast('Task added succesfully', 'success', 3000);
     }
 
     const removeTaskFromList = (id) => {
-        let index;
-        taskList.forEach((task, i) => {
-            if (task.id === id)
-                index = i
-        });
-
+        const index = findIndexByTaskId (id);
         const tempArray = taskList;
         tempArray.splice(index, 1);
 
         setTaskList([...tempArray])
 
         saveListToLocalStorage(tempArray)
+        showToast('Task remove from list succesfully', 'success', 3000);
     }
     const setTaskEditable = (id) => {
         setIsEdit(true);
         setId(id);
-        let currentEditTask;
         
-        taskList.forEach((task) => {
-            if (task.id === id) {
-                currentEditTask = task;
-            }
-        })
-setTitle(currentEditTask.title);
-setDescription(currentEditTask.description);
-setPriority(currentEditTask.priority);
+        const currentEditTask = findIndexByTaskId(id);
+        setTitle(currentEditTask.title);
+        setDescription(currentEditTask.description);
+        setPriority(currentEditTask.priority);
 
         console.log(currentEditTask)
+    }
+
+    const UpdateTask = () => {
+       
+const indexToUpdate = findIndexByTaskId(id);
+
+        const tempArray = taskList;
+        tempArray[indexToUpdate] = {
+            id: id,
+            title: title,
+            description: description,
+            priority: priority
+        }
+        setTaskList([...tempArray])
+        saveListToLocalStorage(tempArray);
+        showToast('Task update succesfully', 'success', 3000);
+
+        setId(-1);
+        clearInputFields();
+        setIsEdit(false);
     }
     return (
         <div className="container">
@@ -83,7 +107,7 @@ setPriority(currentEditTask.priority);
             <div className="todo-flex-container">
                 <div>
                     <h2 className="text-center">Show List</h2>
-                    {
+                    <div>{
                         taskList.map((taskItem, index) => {
                             const { id, title, description, priority } = taskItem;
 
@@ -96,6 +120,7 @@ setPriority(currentEditTask.priority);
                             />
                         })
                     }
+                    </div>
                 </div>
                 <hr className="hr" />
                 <div>
@@ -137,7 +162,7 @@ setPriority(currentEditTask.priority);
                                 {
                                     isEdit ?
 
-                                        <button className="btn-add-task" type="button" onClick={addTaskTolist}>Update Task</button>
+                                        <button className="btn-add-task" type="button" onClick={UpdateTask}>Update Task</button>
                                         :
                                         <button className="btn-add-task" type="button" onClick={addTaskTolist}>Add Task</button>
 

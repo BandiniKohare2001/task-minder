@@ -44,6 +44,15 @@
     font-size: 18px;
     font-weight: bold   ;
 }
+.task-container{
+
+    height: 400px;
+    overflow-y: scroll;
+
+}
+.task-container::-webkit-scrollbar{
+ width: 5px;
+}
 @media (max-width: 679px){
 .hr {
     margin-top: 50px;
